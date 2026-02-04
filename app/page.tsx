@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 
 declare global {
@@ -17,12 +17,19 @@ const PHASE_DATA = {
   4: { type: 'youtube-long', price: "1200", reels: ['HSKfSYhNwQ0', '6wYZWGdiAYQ', 'yodm5jMvxqs'], word: "Four", desc: "Color Grading & Audio Mastering" }
 };
 
+const EDITING_STYLES = ["Documentary", "High-Retention", "Cinematic", "Viral Shorts", "Commercial"];
+
 export default function HeroSection() {
   const [hasMounted, setHasMounted] = useState(false);
   const [activePhase, setActivePhase] = useState<1 | 2 | 3 | 4>(1);
+  const [styleIndex, setStyleIndex] = useState(0);
 
   useEffect(() => {
     setHasMounted(true);
+    const interval = setInterval(() => {
+      setStyleIndex((prev) => (prev + 1) % EDITING_STYLES.length);
+    }, 2500);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -31,27 +38,23 @@ export default function HeroSection() {
     }
   }, [activePhase]);
 
-  // WHATSAPP REDIRECTION LOGIC
   const handleWhatsAppBooking = () => {
-    const phoneNumber = "918170083849"; // REPLACE WITH YOUR PHONE NUMBER
+    const phoneNumber = "918170083849";
     const currentPhase = PHASE_DATA[activePhase];
     const firstVideoId = currentPhase.reels[0];
-    
-    // Determine platform link
     const videoLink = currentPhase.type === 'instagram' 
       ? `https://www.instagram.com/reel/${firstVideoId}/` 
       : `https://www.youtube.com/watch?v=${firstVideoId}`;
 
     const message = `I want to edit this type of video: ${videoLink}, price: $${currentPhase.price}`;
     const encodedMessage = encodeURIComponent(message);
-    
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
   };
 
   return (
     <div className="min-h-screen bg-[#050208] text-white overflow-hidden relative font-sans">
       
-      {/* BACKGROUND & LAYER 2 PHOTO */}
+      {/* BACKGROUND DECORATION */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full" />
         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
@@ -73,19 +76,47 @@ export default function HeroSection() {
 
         <main className="pt-16 pb-20 text-center px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-6">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-8">
               Video <span className="bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 bg-clip-text text-transparent italic">Editing</span>
               <br />Made Simple
             </h1>
-            <div className="flex flex-col sm:flex-row items-center p-1.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl max-w-lg mx-auto mb-16">
-              <input type="email" placeholder="Enter your email" className="bg-transparent w-full px-5 py-3 outline-none" />
-              <button className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-red-600 px-8 py-3 rounded-xl font-bold text-sm">Get early access</button>
+
+            {/* INTERESTING REPLACEMENT FOR EMAIL SECTION */}
+            <div className="flex flex-col items-center justify-center gap-6 mb-16">
+              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full backdrop-blur-md shadow-xl">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span className="text-sm font-medium tracking-wide text-gray-300">
+                  Currently Available for <span className="text-white font-bold inline-block min-w-[120px] text-left ml-1">
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={styleIndex}
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -10, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {EDITING_STYLES[styleIndex]}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                </span>
+              </div>
+              
+              <div className="flex gap-8 text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">
+                <span>100+ Projects Done</span>
+                <span className="text-white/20">|</span>
+                <span>Fast Delivery</span>
+                <span className="text-white/20">|</span>
+                <span>Unlimited Revisions</span>
+              </div>
             </div>
           </motion.div>
 
-          <div className="mt-32 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            
-            {/* PHASE DIV WITH PRICE AND BOOK NOW */}
+          <div className="mt-20 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            {/* Left Card: Phases */}
             <div className="bg-[#120b1a]/60 backdrop-blur-md border border-white/5 p-8 rounded-[32px] md:col-span-1 flex flex-col min-h-[600px]">
               <h3 className="text-2xl font-bold mb-6 text-purple-400">Editing Phases</h3>
               <div className="space-y-4 mb-8 flex-grow">
@@ -100,7 +131,6 @@ export default function HeroSection() {
                 ))}
               </div>
 
-              {/* PRICE AND BOOK NOW SECTION */}
               <div className="pt-6 border-t border-white/10 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest">Price</p>
@@ -115,7 +145,7 @@ export default function HeroSection() {
               </div>
             </div>
 
-            {/* DYNAMIC MEDIA SECTION */}
+            {/* Right Card: Dynamic Media */}
             <div className="bg-[#120b1a]/60 backdrop-blur-md border border-white/5 p-8 rounded-[32px] md:col-span-2">
               <h3 className="text-2xl font-bold mb-8 italic">
                 {PHASE_DATA[activePhase].type === 'instagram' ? 'Trending Reels' : 
