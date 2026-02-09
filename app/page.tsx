@@ -11,10 +11,10 @@ declare global {
 }
 
 const PHASE_DATA = {
-  1: { type: 'instagram', price: "299", reels: ['DUDsUtMDv16', 'DPBN8cNCI-9', 'DQyDU1nia7p'], word: "One", desc: "Raw Footage Analysis & Culling" },
-  2: { type: 'instagram', price: "499", reels: ['DT0LVbxCdAK', 'DTP-uIdAQSG', 'DRWLb5fiBPa'], word: "Two", desc: "Storyboarding & Rough Cut" },
-  3: { type: 'youtube-shorts', price: "799", reels: ['DYywPTshmFI', '70Q1sE2IyE4', 'Va7alUrpidY'], word: "Three", desc: "Advanced VFX & Transitions" },
-  4: { type: 'youtube-long', price: "1200", reels: ['HSKfSYhNwQ0', '6wYZWGdiAYQ', 'yodm5jMvxqs'], word: "Four", desc: "Color Grading & Audio Mastering" }
+  1: { type: 'instagram', price: "5", reels: ['DUDsUtMDv16', 'DPBN8cNCI-9', 'DQyDU1nia7p'], word: "Basic", desc: "Raw Footage Analysis & Culling" },
+  2: { type: 'instagram', price: "10", reels: ['DT0LVbxCdAK', 'DTP-uIdAQSG', 'DRWLb5fiBPa'], word: "Intermediate", desc: "Storyboarding & Rough Cut" },
+  3: { type: 'youtube-shorts', price: "20", reels: ['DYywPTshmFI', 've8avJ-hCS8', 'uZY9xr-QAk0'], word: "Advance", desc: "Advanced VFX & Transitions" },
+  4: { type: 'youtube-long', price: "60", reels: ['HSKfSYhNwQ0', '6wYZWGdiAYQ', 'yodm5jMvxqs'], word: "Wedding", desc: "Color Grading & Audio Mastering" }
 };
 
 const EDITING_STYLES = ["Documentary", "High-Retention", "Cinematic", "Viral Shorts", "Commercial"];
@@ -39,7 +39,7 @@ export default function HeroSection() {
   }, [activePhase]);
 
   const handleWhatsAppBooking = () => {
-    const phoneNumber = "918170083849";
+    const phoneNumber = "919547544915";
     const currentPhase = PHASE_DATA[activePhase];
     const firstVideoId = currentPhase.reels[0];
     const videoLink = currentPhase.type === 'instagram' 
@@ -54,7 +54,6 @@ export default function HeroSection() {
   return (
     <div className="min-h-screen bg-[#050208] text-white overflow-hidden relative font-sans">
       
-      {/* BACKGROUND DECORATION */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full" />
         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
@@ -67,21 +66,40 @@ export default function HeroSection() {
       </div>
 
       <div className="relative z-10">
-        <nav className="flex items-center justify-between px-10 py-8 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
-            <Image src="/lo.png" alt="Logo" width={40} height={40} className="rounded-lg" />
-            <span className="text-2xl font-extrabold tracking-tighter">SOnaiAep</span>
+        <nav className="flex items-center justify-between px-6 md:px-10 py-8 max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 group cursor-default">
+            <div className="relative w-12 h-12 md:w-16 md:h-16 transition-transform duration-300 group-hover:scale-110">
+              <Image src="/Picsart_26-02-04_22-29-28-967.png" alt="Logo" fill className="rounded-lg object-contain shadow-lg shadow-purple-500/20" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-2xl md:text-3xl font-black tracking-tighter uppercase italic">
+                SOnai<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 font-light not-italic">Aep</span>
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold ml-1">Creative Studio</span>
+            </div>
           </div>
         </nav>
 
         <main className="pt-16 pb-20 text-center px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-8">
-              Video <span className="bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 bg-clip-text text-transparent italic">Editing</span>
-              <br />Made Simple
+            
+            {/* --- NEW DECORATED HEADING START --- */}
+            <h1 className="text-5xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[1.1]">
+              Unleash Your <br />
+              <span className="relative inline-block">
+                <span className="absolute -inset-2 bg-gradient-to-r from-pink-500 to-orange-500 blur-2xl opacity-20 animate-pulse"></span>
+                <span className="relative bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 bg-clip-text text-transparent italic px-2">
+                  Viral
+                </span>
+              </span>
+              {" "}Potential
+              <br />
+              <span className="text-3xl md:text-6xl font-light tracking-wide text-white/90">
+                With Pro Video Editing
+              </span>
             </h1>
+            {/* --- NEW DECORATED HEADING END --- */}
 
-            {/* INTERESTING REPLACEMENT FOR EMAIL SECTION */}
             <div className="flex flex-col items-center justify-center gap-6 mb-16">
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full backdrop-blur-md shadow-xl">
                 <span className="relative flex h-3 w-3">
@@ -105,18 +123,17 @@ export default function HeroSection() {
                 </span>
               </div>
               
-              <div className="flex gap-8 text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">
+              <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
                 <span>100+ Projects Done</span>
-                <span className="text-white/20">|</span>
+                <span className="hidden md:block text-white/20">|</span>
                 <span>Fast Delivery</span>
-                <span className="text-white/20">|</span>
+                <span className="hidden md:block text-white/20">|</span>
                 <span>Unlimited Revisions</span>
               </div>
             </div>
           </motion.div>
 
           <div className="mt-20 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            {/* Left Card: Phases */}
             <div className="bg-[#120b1a]/60 backdrop-blur-md border border-white/5 p-8 rounded-[32px] md:col-span-1 flex flex-col min-h-[600px]">
               <h3 className="text-2xl font-bold mb-6 text-purple-400">Editing Phases</h3>
               <div className="space-y-4 mb-8 flex-grow">
@@ -124,7 +141,9 @@ export default function HeroSection() {
                   <button key={num} onClick={() => setActivePhase(num)} className={`w-full flex items-start gap-4 p-4 rounded-2xl transition-all border ${activePhase === num ? 'bg-purple-500/10 border-purple-500/50' : 'bg-transparent border-transparent hover:bg-white/5'}`}>
                     <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold ${activePhase === num ? 'bg-purple-500 text-white' : 'bg-purple-500/20 text-purple-400 border-purple-500/40'}`}>{num}</div>
                     <div className="text-left">
-                      <p className={`text-sm font-bold uppercase tracking-wider ${activePhase === num ? 'text-white' : 'text-gray-400'}`}>Phase {PHASE_DATA[num].word}</p>
+                      <p className={`text-sm font-bold uppercase tracking-wider ${activePhase === num ? 'text-white' : 'text-gray-400'}`}>
+                        {PHASE_DATA[num].word}
+                      </p>
                       <p className="text-[10px] text-gray-500">{PHASE_DATA[num].desc}</p>
                     </div>
                   </button>
@@ -145,7 +164,6 @@ export default function HeroSection() {
               </div>
             </div>
 
-            {/* Right Card: Dynamic Media */}
             <div className="bg-[#120b1a]/60 backdrop-blur-md border border-white/5 p-8 rounded-[32px] md:col-span-2">
               <h3 className="text-2xl font-bold mb-8 italic">
                 {PHASE_DATA[activePhase].type === 'instagram' ? 'Trending Reels' : 
