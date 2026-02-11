@@ -14,10 +14,34 @@ declare global {
 const ADMIN_PASSWORD = "s09I"; 
 
 const INITIAL_PHASE_DATA = {
-  1: { type: 'instagram', price: "5", reels: ['DUDsUtMDv16', 'DPBN8cNCI-9', 'DQyDU1nia7p'], word: "Basic", desc: "Raw Footage Analysis & Culling" },
-  2: { type: 'instagram', price: "10", reels: ['DT0LVbxCdAK', 'DTP-uIdAQSG', 'DRWLb5fiBPa'], word: "Intermediate", desc: "Storyboarding & Rough Cut" },
-  3: { type: 'youtube-shorts', price: "20", reels: ['DYywPTshmFI', 've8avJ-hCS8', 'uZY9xr-QAk0'], word: "Advance", desc: "Advanced VFX & Transitions" },
-  4: { type: 'youtube-long', price: "60", reels: ['HSKfSYhNwQ0', '6wYZWGdiAYQ', 'yodm5jMvxqs'], word: "Wedding", desc: "Color Grading & Audio Mastering" }
+  1: { 
+    type: 'instagram', 
+    price: "5", 
+    reels: ['DUDsUtMDv16', 'DPBN8cNCI-9', 'DQyDU1nia7p'], 
+    word: "Instagram Reel", 
+    desc: "Raw Footage Analysis & Culling" 
+  },
+  2: { 
+    type: 'instagram', 
+    price: "10", 
+    reels: ['DT0LVbxCdAK', 'DTP-uIdAQSG', 'DRWLb5fiBPa'], 
+    word: "Advance Reel", 
+    desc: "Advanced VFX & Transitions" // Swapped from original Phase 3
+  },
+  3: { 
+    type: 'youtube-shorts', 
+    price: "20", 
+    reels: ['DYywPTshmFI', 've8avJ-hCS8', 'uZY9xr-QAk0'], 
+    word: "YT Shorts", 
+    desc: "Storyboarding & Rough Cut" // Swapped from original Phase 2
+  },
+  4: { 
+    type: 'youtube-long', 
+    price: "60", 
+    reels: ['HSKfSYhNwQ0', '6wYZWGdiAYQ', 'yodm5jMvxqs'], 
+    word: "YT Long & Wedding", 
+    desc: "Color Grading & Audio Mastering" 
+  }
 };
 
 const EDITING_STYLES = ["Documentary", "High-Retention", "Cinematic", "Viral Shorts", "Commercial"];
@@ -34,7 +58,7 @@ export default function HeroSection() {
   useEffect(() => {
     setHasMounted(true);
     // Load saved data from browser if exists
-    const saved = localStorage.getItem('sonai_admin_data');
+   const saved = localStorage.getItem('sonai_admin_live_v1');
     if (saved) setPhaseData(JSON.parse(saved));
 
     const interval = setInterval(() => {
@@ -65,7 +89,7 @@ export default function HeroSection() {
       [phase]: { ...phaseData[phase as keyof typeof phaseData], [field]: value } 
     };
     setPhaseData(newData as any);
-    localStorage.setItem('sonai_admin_data', JSON.stringify(newData));
+    localStorage.setItem('sonai_admin_live_v1', JSON.stringify(newData));
   };
 
   const handleWhatsAppBooking = () => {
@@ -109,7 +133,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* --- ADMIN BUTTON TOP RIGHT --- */}
           <button 
             onClick={handleAdminToggle}
             className={`text-[10px] uppercase tracking-widest px-4 py-2 rounded-full border transition-all ${
