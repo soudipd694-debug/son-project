@@ -10,7 +10,10 @@ declare global {
   }
 }
 
-const PHASE_DATA = {
+// --- ADMIN SETTINGS ---
+const ADMIN_PASSWORD = "s09I"; 
+
+const INITIAL_PHASE_DATA = {
   1: { type: 'instagram', price: "5", reels: ['DUDsUtMDv16', 'DPBN8cNCI-9', 'DQyDU1nia7p'], word: "Basic", desc: "Raw Footage Analysis & Culling" },
   2: { type: 'instagram', price: "10", reels: ['DT0LVbxCdAK', 'DTP-uIdAQSG', 'DRWLb5fiBPa'], word: "Intermediate", desc: "Storyboarding & Rough Cut" },
   3: { type: 'youtube-shorts', price: "20", reels: ['DYywPTshmFI', 've8avJ-hCS8', 'uZY9xr-QAk0'], word: "Advance", desc: "Advanced VFX & Transitions" },
@@ -23,9 +26,17 @@ export default function HeroSection() {
   const [hasMounted, setHasMounted] = useState(false);
   const [activePhase, setActivePhase] = useState<1 | 2 | 3 | 4>(1);
   const [styleIndex, setStyleIndex] = useState(0);
+  
+  // Admin States
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [phaseData, setPhaseData] = useState(INITIAL_PHASE_DATA);
 
   useEffect(() => {
     setHasMounted(true);
+    // Load saved data from browser if exists
+    const saved = localStorage.getItem('sonai_admin_data');
+    if (saved) setPhaseData(JSON.parse(saved));
+
     const interval = setInterval(() => {
       setStyleIndex((prev) => (prev + 1) % EDITING_STYLES.length);
     }, 2500);
@@ -33,14 +44,33 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
-    if (window.instgrm && PHASE_DATA[activePhase].type === 'instagram') {
+    if (window.instgrm && phaseData[activePhase].type === 'instagram') {
       window.instgrm.Embeds.process();
     }
-  }, [activePhase]);
+  }, [activePhase, phaseData]);
+
+  const handleAdminToggle = () => {
+    if (isAdmin) {
+      setIsAdmin(false);
+    } else {
+      const pass = prompt("Enter Admin Password:");
+      if (pass === ADMIN_PASSWORD) setIsAdmin(true);
+      else alert("Wrong password!");
+    }
+  };
+
+  const updateData = (phase: number, field: string, value: any) => {
+    const newData = { 
+      ...phaseData, 
+      [phase]: { ...phaseData[phase as keyof typeof phaseData], [field]: value } 
+    };
+    setPhaseData(newData as any);
+    localStorage.setItem('sonai_admin_data', JSON.stringify(newData));
+  };
 
   const handleWhatsAppBooking = () => {
     const phoneNumber = "919547544915";
-    const currentPhase = PHASE_DATA[activePhase];
+    const currentPhase = phaseData[activePhase];
     const firstVideoId = currentPhase.reels[0];
     const videoLink = currentPhase.type === 'instagram' 
       ? `https://www.instagram.com/reel/${firstVideoId}/` 
@@ -78,12 +108,21 @@ export default function HeroSection() {
               <span className="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold ml-1">Creative Studio</span>
             </div>
           </div>
+
+          {/* --- ADMIN BUTTON TOP RIGHT --- */}
+          <button 
+            onClick={handleAdminToggle}
+            className={`text-[10px] uppercase tracking-widest px-4 py-2 rounded-full border transition-all ${
+                isAdmin ? 'bg-red-500/20 border-red-500 text-red-400' : 'bg-white/5 border-white/10 text-gray-500 hover:text-white'
+            }`}
+          >
+            {isAdmin ? "Exit Admin 🔓" : "Admin 🔒"}
+          </button>
         </nav>
 
         <main className="pt-16 pb-20 text-center px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             
-            {/* --- NEW DECORATED HEADING START --- */}
             <h1 className="text-5xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[1.1]">
               Unleash Your <br />
               <span className="relative inline-block">
@@ -98,7 +137,6 @@ export default function HeroSection() {
                 With Pro Video Editing
               </span>
             </h1>
-            {/* --- NEW DECORATED HEADING END --- */}
 
             <div className="flex flex-col items-center justify-center gap-6 mb-16">
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full backdrop-blur-md shadow-xl">
@@ -122,14 +160,6 @@ export default function HeroSection() {
                   </span>
                 </span>
               </div>
-              
-              <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
-                <span>100+ Projects Done</span>
-                <span className="hidden md:block text-white/20">|</span>
-                <span>Fast Delivery</span>
-                <span className="hidden md:block text-white/20">|</span>
-                <span>Unlimited Revisions</span>
-              </div>
             </div>
           </motion.div>
 
@@ -137,14 +167,14 @@ export default function HeroSection() {
             <div className="bg-[#120b1a]/60 backdrop-blur-md border border-white/5 p-8 rounded-[32px] md:col-span-1 flex flex-col min-h-[600px]">
               <h3 className="text-2xl font-bold mb-6 text-purple-400">Editing Phases</h3>
               <div className="space-y-4 mb-8 flex-grow">
-                {(Object.keys(PHASE_DATA) as unknown as (1|2|3|4)[]).map((num) => (
+                {(Object.keys(phaseData) as unknown as (1|2|3|4)[]).map((num) => (
                   <button key={num} onClick={() => setActivePhase(num)} className={`w-full flex items-start gap-4 p-4 rounded-2xl transition-all border ${activePhase === num ? 'bg-purple-500/10 border-purple-500/50' : 'bg-transparent border-transparent hover:bg-white/5'}`}>
                     <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold ${activePhase === num ? 'bg-purple-500 text-white' : 'bg-purple-500/20 text-purple-400 border-purple-500/40'}`}>{num}</div>
                     <div className="text-left">
                       <p className={`text-sm font-bold uppercase tracking-wider ${activePhase === num ? 'text-white' : 'text-gray-400'}`}>
-                        {PHASE_DATA[num].word}
+                        {phaseData[num].word}
                       </p>
-                      <p className="text-[10px] text-gray-500">{PHASE_DATA[num].desc}</p>
+                      <p className="text-[10px] text-gray-500">{phaseData[num].desc}</p>
                     </div>
                   </button>
                 ))}
@@ -153,7 +183,16 @@ export default function HeroSection() {
               <div className="pt-6 border-t border-white/10 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest">Price</p>
-                  <div className="text-4xl font-black text-white">${PHASE_DATA[activePhase].price}</div>
+                  {isAdmin ? (
+                    <input 
+                      type="text" 
+                      className="bg-purple-900/40 text-2xl w-20 rounded border border-purple-500 px-2 outline-none"
+                      value={phaseData[activePhase].price}
+                      onChange={(e) => updateData(activePhase, 'price', e.target.value)}
+                    />
+                  ) : (
+                    <div className="text-4xl font-black text-white">${phaseData[activePhase].price}</div>
+                  )}
                 </div>
                 <button 
                   onClick={handleWhatsAppBooking}
@@ -165,18 +204,35 @@ export default function HeroSection() {
             </div>
 
             <div className="bg-[#120b1a]/60 backdrop-blur-md border border-white/5 p-8 rounded-[32px] md:col-span-2">
-              <h3 className="text-2xl font-bold mb-8 italic">
-                {PHASE_DATA[activePhase].type === 'instagram' ? 'Trending Reels' : 
-                 PHASE_DATA[activePhase].type === 'youtube-shorts' ? 'YouTube Shorts' : 'YouTube Long-form'} 
-              </h3>
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-bold italic">
+                  {phaseData[activePhase].type === 'instagram' ? 'Trending Reels' : 
+                   phaseData[activePhase].type === 'youtube-shorts' ? 'YouTube Shorts' : 'YouTube Long-form'} 
+                </h3>
+                {isAdmin && <span className="text-[10px] text-red-400 font-bold animate-pulse">ADMIN EDITING MODE</span>}
+              </div>
               
-              <div className={`grid gap-6 ${PHASE_DATA[activePhase].type === 'youtube-long' ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'}`}>
-                {hasMounted && PHASE_DATA[activePhase].reels.map((id) => (
-                  <div key={`${activePhase}-${id}`} className={`w-full rounded-2xl overflow-hidden bg-black border border-white/5 ${PHASE_DATA[activePhase].type === 'youtube-long' ? 'aspect-video' : 'min-h-[450px]'}`}>
-                    {PHASE_DATA[activePhase].type === 'instagram' ? (
-                      <blockquote className="instagram-media" data-instgrm-permalink={`https://www.instagram.com/reel/${id}/`} data-instgrm-version="14" style={{ width: '100%' }}></blockquote>
-                    ) : (
-                      <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${id}`} frameBorder="0" allowFullScreen></iframe>
+              <div className={`grid gap-6 ${phaseData[activePhase].type === 'youtube-long' ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'}`}>
+                {hasMounted && phaseData[activePhase].reels.map((id, index) => (
+                  <div key={`${activePhase}-${id}-${index}`} className="flex flex-col gap-2">
+                    <div className={`w-full rounded-2xl overflow-hidden bg-black border border-white/5 ${phaseData[activePhase].type === 'youtube-long' ? 'aspect-video' : 'min-h-[450px]'}`}>
+                      {phaseData[activePhase].type === 'instagram' ? (
+                        <blockquote className="instagram-media" data-instgrm-permalink={`https://www.instagram.com/reel/${id}/`} data-instgrm-version="14" style={{ width: '100%' }}></blockquote>
+                      ) : (
+                        <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${id}`} frameBorder="0" allowFullScreen></iframe>
+                      )}
+                    </div>
+                    {isAdmin && (
+                      <input 
+                        className="bg-white/10 text-[10px] p-2 rounded border border-white/20 outline-none focus:border-purple-500"
+                        placeholder="Paste Video ID here"
+                        value={id}
+                        onChange={(e) => {
+                          const newReels = [...phaseData[activePhase].reels];
+                          newReels[index] = e.target.value;
+                          updateData(activePhase, 'reels', newReels);
+                        }}
+                      />
                     )}
                   </div>
                 ))}
